@@ -1,0 +1,6 @@
+homepage: "https://beyondpricing.com"
+documentation: "https://github.com/1024inc/beacon-gtm-template"
+versions:
+  - sha: 36dce5e08a673c372740daeecda66ce99debc399
+    changeNotes: Initial release.
+
