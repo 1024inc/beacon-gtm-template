@@ -29,23 +29,38 @@ ___INFO___
 
 ___TEMPLATE_PARAMETERS___
 
-[]
+[
+  {
+    "type": "TEXT",
+    "name": "trackingKey",
+    "displayName": "Installation Key",
+    "simpleValueType": true,
+    "alwaysInSummary": true,
+    "valueHint": "trck_...",
+    "help": "Paste the Installation Key for this domain, shown on the Beacon Integrations page in your Beyond account. Installs that predate Installation Keys can leave this empty."
+  }
+]
 
 
 ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 
 const injectScript = require('injectScript');
 const queryPermission = require('queryPermission');
+const setInWindow = require('setInWindow');
 
 const url = 'https://beacon.beyondpricing.com/payload.js';
+
+// window.__BEACON is the payload's public command queue. Create it only when it
+// is absent, then set the key as a property, so an existing queue survives.
+if (data.trackingKey) {
+  setInWindow('__BEACON', [], false);
+  setInWindow('__BEACON.trackingKey', data.trackingKey, true);
+}
+
 if (queryPermission('inject_script', url)) {
-  injectScript(
-    url,
-    () => {
-      data.gtmOnSuccess();
-    },
-    () => {}
-  );
+  injectScript(url, data.gtmOnSuccess, data.gtmOnFailure, url);
+} else {
+  data.gtmOnFailure();
 }
 
 
@@ -77,13 +92,101 @@ ___WEB_PERMISSIONS___
       "isEditedByUser": true
     },
     "isRequired": true
+  },
+  {
+    "instance": {
+      "key": {
+        "publicId": "access_globals",
+        "versionId": "1"
+      },
+      "param": [
+        {
+          "key": "keys",
+          "value": {
+            "type": 2,
+            "listItem": [
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "__BEACON"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "clientAnnotations": {
+      "isEditedByUser": true
+    },
+    "isRequired": true
   }
 ]
 
 
 ___TESTS___
 
-scenarios: []
+scenarios:
+- name: sets the key and injects the payload script
+  code: |-
+    mock('queryPermission', true);
+
+    runCode({trackingKey: 'trck_examp_0123abcd'});
+
+    assertApi('setInWindow').wasCalledWith('__BEACON', [], false);
+    assertApi('setInWindow').wasCalledWith('__BEACON.trackingKey', 'trck_examp_0123abcd', true);
+    assertApi('injectScript').wasCalled();
+    assertApi('gtmOnSuccess').wasCalled();
+- name: keyless install touches no globals
+  code: |-
+    mock('queryPermission', true);
+
+    runCode({});
+
+    assertApi('setInWindow').wasNotCalled();
+    assertApi('injectScript').wasCalled();
+    assertApi('gtmOnSuccess').wasCalled();
+- name: fails when script injection is not permitted
+  code: |-
+    mock('queryPermission', false);
+
+    runCode({trackingKey: 'trck_examp_0123abcd'});
+
+    assertApi('injectScript').wasNotCalled();
+    assertApi('gtmOnFailure').wasCalled();
 
 
 ___NOTES___
