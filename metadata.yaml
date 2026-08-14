@@ -1,6 +1,8 @@
 homepage: "https://beyondpricing.com"
 documentation: "https://github.com/1024inc/beacon-gtm-template"
 versions:
+  - sha: 95bcd573c14572d0c0fe9ca2d9016ea2a5eb3ad2
+    changeNotes: Add an Installation Key field. The tag passes the key to the Beacon script, which sends it on install events.
   - sha: 36dce5e08a673c372740daeecda66ce99debc399
     changeNotes: Initial release.
 
