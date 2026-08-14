@@ -143,6 +143,45 @@ ___WEB_PERMISSIONS___
                     "boolean": false
                   }
                 ]
+              },
+              {
+                "type": 3,
+                "mapKey": [
+                  {
+                    "type": 1,
+                    "string": "key"
+                  },
+                  {
+                    "type": 1,
+                    "string": "read"
+                  },
+                  {
+                    "type": 1,
+                    "string": "write"
+                  },
+                  {
+                    "type": 1,
+                    "string": "execute"
+                  }
+                ],
+                "mapValue": [
+                  {
+                    "type": 1,
+                    "string": "__BEACON.trackingKey"
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": true
+                  },
+                  {
+                    "type": 8,
+                    "boolean": false
+                  }
+                ]
               }
             ]
           }
@@ -163,6 +202,9 @@ scenarios:
 - name: sets the key and injects the payload script
   code: |-
     mock('queryPermission', true);
+    mock('injectScript', function(url, onSuccess, onFailure, cacheToken) {
+      onSuccess();
+    });
 
     runCode({trackingKey: 'trck_examp_0123abcd'});
 
@@ -173,6 +215,9 @@ scenarios:
 - name: keyless install touches no globals
   code: |-
     mock('queryPermission', true);
+    mock('injectScript', function(url, onSuccess, onFailure, cacheToken) {
+      onSuccess();
+    });
 
     runCode({});
 
