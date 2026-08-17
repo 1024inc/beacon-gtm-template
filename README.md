@@ -1,6 +1,6 @@
-# Beacon GTM Template
+# Beyond Beacon GTM Template
 
-Easily add Beacon to your website via Google Tag Manager
+Easily add Beyond Beacon to your website via Google Tag Manager
 
 ## Installation Key
 

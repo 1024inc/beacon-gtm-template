@@ -13,7 +13,7 @@ ___INFO___
   "id": "cvt_temp_public_id",
   "version": 1,
   "securityGroups": [],
-  "displayName": "Beacon",
+  "displayName": "Beyond Beacon",
   "categories": ["ANALYTICS", "CONVERSIONS"],
   "brand": {
     "id": "brand_dummy",
