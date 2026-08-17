@@ -1,6 +1,8 @@
 homepage: "https://beyondpricing.com"
 documentation: "https://github.com/1024inc/beacon-gtm-template"
 versions:
+  - sha: 459352f0121a5a0d51b4ec1633de405d5a3adabd
+    changeNotes: Rename the template to Beyond Beacon so the gallery search finds it under that name.
   - sha: 8f3f6ac981d05e7339e63c489b3e4c1d6b4a2d77
     changeNotes: Add an Installation Key field. The tag passes the key to the Beacon script, which sends it on install events.
   - sha: 36dce5e08a673c372740daeecda66ce99debc399
